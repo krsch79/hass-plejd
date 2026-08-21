@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.21.3.post4 - 2026-08-21
+
+- Reauthenticate the existing BLE connection after an unconfirmed command.
+- Poll for the matching state before falling back to a full reconnect.
+- Retain the tested post2/post3 reconnect path if in-place authentication does
+  not flush the mesh command.
+
 ## 0.21.3.post3 - 2026-08-21
 
 - Wait briefly for a matching device-state confirmation before reconnecting.

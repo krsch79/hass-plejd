@@ -4,6 +4,27 @@
 
 Connects to your [Plejd](https://www.plejd.com) devices using your Home Assistant Bluetooth.
 
+## Kristian reliability fork
+
+Version `0.21.3.post2` is pinned to a tested pyplejd commit for Home Assistant
+2026.8 and Plejd firmware 6.43.x. It keeps direct BLE authentication as the
+normal path, reconnects once after commands to non-gateway mesh nodes, and
+disables active button-event polling that can feed repeated stale events back
+into Home Assistant. Physical button events that arrive normally are still
+accepted, with identical duplicates inside 250 milliseconds discarded.
+
+This is a local compatibility release while upstream issue #162 remains open.
+Do not replace it from HACS with upstream `0.21.3` without repeating the full
+gateway and command acceptance test.
+
+### Validation and deployment
+
+Run `python -m unittest -v tests.test_release` and compile the component before
+deployment. Copy only the tracked `custom_components/plejd` files into the Home
+Assistant config, restart Core so the pinned Python requirement is installed,
+then verify all gateway candidates and every light. Credentials and live Home
+Assistant state are runtime-only and must never be added to this repository.
+
 This integration requires a [Bluetooth](https://www.home-assistant.io/integrations/bluetooth/) adapter which supports at least one Active connections.
 
 Using an [EspHome Bluetooth Proxy](https://esphome.io/projects/?type=bluetooth) is recommended, but Shelly proxies will not work.

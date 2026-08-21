@@ -1,6 +1,7 @@
 """Support for Plejd events."""
 
 from datetime import timedelta
+import time
 
 from homeassistant.components.event import EventEntity, EventDeviceClass
 from homeassistant.config_entries import ConfigEntry
@@ -10,6 +11,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .plejd_site import dt, get_plejd_site_from_config_entry, PlejdSite
 from .plejd_entity import PlejdDeviceBaseEntity
+from .const import DUPLICATE_BUTTON_EVENT_WINDOW_SECONDS
 
 import logging
 
@@ -87,6 +89,8 @@ class PlejdButtonEvent(PlejdDeviceBaseEntity, EventEntity):
         """Set up event."""
         super().__init__(device)
         self.device: dt.PlejdButton
+        self._last_action = None
+        self._last_action_at = 0.0
 
     @property
     def name(self) -> str:
@@ -98,11 +102,19 @@ class PlejdButtonEvent(PlejdDeviceBaseEntity, EventEntity):
         """Return unique identifier for the event entity."""
         return super().unique_id + ":press"
 
-    # @Throttle(SCENE_ACTIVATION_RATE_LIMIT)
     @callback
     def _handle_update(self, event) -> None:
         """When a button is pushed from Plejd."""
         action = event.get("action")
+        now = time.monotonic()
+        if (
+            action == self._last_action
+            and now - self._last_action_at
+            < DUPLICATE_BUTTON_EVENT_WINDOW_SECONDS
+        ):
+            return
+        self._last_action = action
+        self._last_action_at = now
         if action == "press":
             self._trigger_event("press")
         elif action == "release":

@@ -8,7 +8,12 @@ custom_components/*/
 !custom_components/plejd
 **/__pycache__/
 !README.md
+!CHANGELOG.md
+!AGENTS.md
+!tests/
+!tests/**
 !pyplejd
+*.py[cod]
 !.devcontainer/
 !.vscode/
 !.github/

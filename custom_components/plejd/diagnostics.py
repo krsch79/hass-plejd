@@ -85,4 +85,10 @@ async def async_get_config_entry_diagnostics(
     site: PlejdSite = get_plejd_site_from_config_entry(hass, config_entry)
     plejdManager: PlejdManager = site.manager
     sitedata = await plejdManager.get_raw_sitedata()
-    return redact(sitedata, REDACT_KEYS)
+    reliability = dict(plejdManager.mesh.diagnostics)
+    if reliability.get("gateway"):
+        reliability["gateway"] = "<REDACTED>"
+    return {
+        "site": redact(sitedata, REDACT_KEYS),
+        "local_reliability": reliability,
+    }

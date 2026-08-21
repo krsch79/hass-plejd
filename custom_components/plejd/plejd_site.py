@@ -21,7 +21,11 @@ from pyplejd import (
     DeviceTypes as dt,
 )
 
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    ENABLE_ACTIVE_BUTTON_POLLING,
+    RECONNECT_NON_GATEWAY_CONTROL_WRITES,
+)
 from .plejd_entity import register_unknown_device
 
 _LOGGER = logging.getLogger(__name__)
@@ -56,6 +60,10 @@ class PlejdSite:
         self.store = Store(hass, SITE_DATA_STORE_VERSION, SITE_DATA_STORE_KEY)
 
         self.manager: PlejdManager = PlejdManager(**self.credentials)
+        self.manager.button_events_enabled = ENABLE_ACTIVE_BUTTON_POLLING
+        self.manager.reconnect_after_control_write = (
+            RECONNECT_NON_GATEWAY_CONTROL_WRITES
+        )
 
         self.devices: list[dt.PlejdDevice] = []
 

@@ -6,9 +6,9 @@ Connects to your [Plejd](https://www.plejd.com) devices using your Home Assistan
 
 ## Kristian reliability fork
 
-Version `0.21.3.post2` is pinned to a tested pyplejd commit for Home Assistant
+Version `0.21.3.post3` is pinned to a tested pyplejd commit for Home Assistant
 2026.8 and Plejd firmware 6.43.x. It keeps direct BLE authentication as the
-normal path, reconnects once after commands to non-gateway mesh nodes, and
+normal path, reconnects only after an unconfirmed command to a non-gateway mesh node, and
 disables active button-event polling that can feed repeated stale events back
 into Home Assistant. Physical button events that arrive normally are still
 accepted, with identical duplicates inside 250 milliseconds discarded.

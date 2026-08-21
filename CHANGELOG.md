@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.21.3.post3 - 2026-08-21
+
+- Wait briefly for a matching device-state confirmation before reconnecting.
+- Keep the reliable reconnect-and-flush path as a fallback only when the mesh
+  does not confirm the command.
+- Reduce normal non-gateway command latency without sacrificing the successful
+  post2 fallback behavior.
+
 ## 0.21.3.post2 - 2026-08-21
 
 - Pin the integration to the tested `krsch79/pyplejd` reliability commit.

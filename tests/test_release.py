@@ -12,7 +12,7 @@ COMPONENT = ROOT / "custom_components" / "plejd"
 class ReleaseTests(unittest.TestCase):
     def test_manifest_pins_exact_reliability_commit(self):
         manifest = json.loads((COMPONENT / "manifest.json").read_text())
-        self.assertEqual(manifest["version"], "0.21.3.post4")
+        self.assertEqual(manifest["version"], "0.21.3.post5")
         pyplejd = next(
             requirement
             for requirement in manifest["requirements"]

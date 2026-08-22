@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.21.3.post5 - 2026-08-22
+
+- Pin pyplejd to the physical-state confirmation build.
+- Reject echoed `LastChangedDataVector` control packets as delivery proof.
+- Poll `NodeIndexData` after non-gateway writes and require the requested power
+  state plus dim level before skipping reauthentication or reconnect recovery.
+- Replace the prior logical-state-only acceptance test with mandatory physical
+  verification from Homey for every Plejd node.
+
 ## 0.21.3.post4 - 2026-08-21
 
 - Reauthenticate the existing BLE connection after an unconfirmed command.

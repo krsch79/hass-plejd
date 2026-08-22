@@ -6,16 +6,18 @@ Connects to your [Plejd](https://www.plejd.com) devices using your Home Assistan
 
 ## Kristian reliability fork
 
-Version `0.21.3.post4` is pinned to a tested pyplejd commit for Home Assistant
+Version `0.21.3.post5` is pinned to a tested pyplejd commit for Home Assistant
 2026.8 and Plejd firmware 6.43.x. It keeps direct BLE authentication as the
 normal path, reconnects only after an unconfirmed command to a non-gateway mesh node, and
 disables active button-event polling that can feed repeated stale events back
 into Home Assistant. Physical button events that arrive normally are still
 accepted, with identical duplicates inside 250 milliseconds discarded.
 
-Before a full reconnect, the integration first retries Plejd authentication on
-the current BLE connection and polls for the requested state. The slower full
-reconnect remains the final reliability fallback.
+After a non-gateway command, the integration polls NodeIndexData and accepts
+only a matching physical power state and dim level as confirmation. An echoed
+LastChangedDataVector command is not delivery proof. If the physical poll does
+not match, the integration retries Plejd authentication on the current BLE
+connection before using a full reconnect as the final reliability fallback.
 
 This is a local compatibility release while upstream issue #162 remains open.
 Do not replace it from HACS with upstream `0.21.3` without repeating the full
@@ -26,8 +28,11 @@ gateway and command acceptance test.
 Run `python -m unittest -v tests.test_release` and compile the component before
 deployment. Copy only the tracked `custom_components/plejd` files into the Home
 Assistant config, restart Core so the pinned Python requirement is installed,
-then verify all gateway candidates and every light. Credentials and live Home
-Assistant state are runtime-only and must never be added to this repository.
+then verify all gateway candidates and every light. Automated HA state changes
+are diagnostic signals only: acceptance requires a person to verify the real
+lights from Homey, including on, off, and at least two dim levels. Credentials
+and live Home Assistant state are runtime-only and must never be added to this
+repository.
 
 This integration requires a [Bluetooth](https://www.home-assistant.io/integrations/bluetooth/) adapter which supports at least one Active connections.
 

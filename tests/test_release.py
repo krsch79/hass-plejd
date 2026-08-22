@@ -12,7 +12,7 @@ COMPONENT = ROOT / "custom_components" / "plejd"
 class ReleaseTests(unittest.TestCase):
     def test_manifest_pins_exact_reliability_commit(self):
         manifest = json.loads((COMPONENT / "manifest.json").read_text())
-        self.assertEqual(manifest["version"], "0.21.3.post8")
+        self.assertEqual(manifest["version"], "0.21.3.post9")
         pyplejd = next(
             requirement
             for requirement in manifest["requirements"]
@@ -33,8 +33,9 @@ class ReleaseTests(unittest.TestCase):
                     values[target.id] = ast.literal_eval(node.value)
         self.assertFalse(values["ENABLE_ACTIVE_BUTTON_POLLING"])
         self.assertFalse(values["ROUTE_CONTROL_WRITES_DIRECTLY"])
-        self.assertTrue(values["RECONNECT_NON_GATEWAY_CONTROL_WRITES"])
-        self.assertTrue(values["FAST_REMOTE_CONTROL_FLUSH"])
+        self.assertFalse(values["RECONNECT_NON_GATEWAY_CONTROL_WRITES"])
+        self.assertFalse(values["FAST_REMOTE_CONTROL_FLUSH"])
+        self.assertTrue(values["PRIME_GATEWAY_CONNECTION"])
         self.assertEqual(values["DUPLICATE_BUTTON_EVENT_WINDOW_SECONDS"], 0.25)
 
     def test_component_sources_compile(self):

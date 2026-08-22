@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.21.3.post7 - 2026-08-22
+
+- Disable the technical `May be gateway` selectors by default in the Home
+  Assistant entity registry.
+- Keep the selectors available for explicit troubleshooting without exposing
+  them as extra physical switches to bridge clients such as Homey.
+
 ## 0.21.3.post6 - 2026-08-22
 
 - Pin pyplejd to the direct target-node routing build.

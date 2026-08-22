@@ -6,18 +6,21 @@ Connects to your [Plejd](https://www.plejd.com) devices using your Home Assistan
 
 ## Kristian reliability fork
 
-Version `0.21.3.post5` is pinned to a tested pyplejd commit for Home Assistant
-2026.8 and Plejd firmware 6.43.x. It keeps direct BLE authentication as the
-normal path, reconnects only after an unconfirmed command to a non-gateway mesh node, and
-disables active button-event polling that can feed repeated stale events back
-into Home Assistant. Physical button events that arrive normally are still
-accepted, with identical duplicates inside 250 milliseconds discarded.
+Version `0.21.3.post6` is pinned to a tested pyplejd commit for Home Assistant
+2026.8 and Plejd firmware 6.43.x. Address-specific light commands are routed
+through a direct authenticated BLE connection to the Plejd hardware that owns
+the output. This bypasses broken mesh forwarding observed on firmware 6.43.x.
+The selected node remains connected for later dim updates, while the saved
+gateway preference still controls automatic connections. Active button-event
+polling remains disabled to prevent stale-event feedback; normally received
+physical button events are still accepted and deduplicated.
 
-After a non-gateway command, the integration polls NodeIndexData and accepts
-only a matching physical power state and dim level as confirmation. An echoed
-LastChangedDataVector command is not delivery proof. If the physical poll does
-not match, the integration retries Plejd authentication on the current BLE
-connection before using a full reconnect as the final reliability fallback.
+Commands that cannot be mapped safely to one hardware node retain the post5
+fallback: poll NodeIndexData, require matching physical power and dim state,
+then reauthenticate or reconnect. An echoed LastChangedDataVector command is
+never delivery proof. The technical `May be gateway` selector is categorized as
+Home Assistant configuration so bridge clients such as Homey do not present it
+as a second circuit switch.
 
 This is a local compatibility release while upstream issue #162 remains open.
 Do not replace it from HACS with upstream `0.21.3` without repeating the full

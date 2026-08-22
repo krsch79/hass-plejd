@@ -64,7 +64,7 @@ class PlejdSwitch(PlejdDeviceBaseEntity, SwitchEntity):
 class PlejdConnectableSwitch(PlejdDeviceDiagnosticEntity, SwitchEntity):
     """Switch to select whether device should be connected to."""
 
-    # _attr_entity_category = EntityCategory.CONFIG
+    _attr_entity_category = EntityCategory.CONFIG
     _attr_name = "May be gateway"
     _id_suffix = "may_be_gateway"
 

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.21.3.post6 - 2026-08-22
+
+- Pin pyplejd to the direct target-node routing build.
+- Route every safely mappable light command through the Plejd hardware that
+  owns the addressed output instead of relying on broken firmware mesh writes.
+- Keep the active target connected for successive dim commands.
+- Categorize `May be gateway` as a Home Assistant configuration entity so it is
+  not represented as a second physical circuit by bridge clients such as Homey.
+- Retain the post5 confirmation/recovery path for non-addressable commands.
+
 ## 0.21.3.post5 - 2026-08-22
 
 - Pin pyplejd to the physical-state confirmation build.

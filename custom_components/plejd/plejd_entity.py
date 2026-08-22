@@ -66,6 +66,7 @@ class PlejdDeviceBaseEntity(Entity):
             self.async_write_ha_state()
 
         self.listener = self.device.subscribe(_listener)
+        self._data = self.device.state
 
     async def async_will_remove_from_hass(self) -> None:
         """When entity will be removed from hass."""

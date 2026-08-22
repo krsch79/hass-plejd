@@ -22,8 +22,8 @@
     "pyplejd"
   ],
   "requirements": [
-    "pyplejd @ git+https://github.com/krsch79/pyplejd.git@09b6183dd45a3f1720567de0b8bc5676240e0751",
+    "pyplejd @ git+https://github.com/krsch79/pyplejd.git@05ad79e2659987306368d4115f0acb90652a9cbe",
     "pydantic"
   ],
-  "version": "0.21.3.post7"
+  "version": "0.21.3.post8"
 }

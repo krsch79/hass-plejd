@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.21.3.post8 - 2026-08-22
+
+- Replace the long-lived Plejd gateway connection with confirmed, on-demand
+  direct connections to the hardware that owns each output.
+- Disconnect after each command while preserving entity availability, avoiding
+  the firmware 6.43.3 output oscillation reproduced after a full power cycle.
+- Use live BLE advertisements to restore availability without opening a
+  controller connection.
+- Pin pyplejd to the matching post7 on-demand reliability build.
+
 ## 0.21.3.post7 - 2026-08-22
 
 - Disable the technical `May be gateway` selectors by default in the Home

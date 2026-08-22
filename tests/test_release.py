@@ -12,7 +12,7 @@ COMPONENT = ROOT / "custom_components" / "plejd"
 class ReleaseTests(unittest.TestCase):
     def test_manifest_pins_exact_reliability_commit(self):
         manifest = json.loads((COMPONENT / "manifest.json").read_text())
-        self.assertEqual(manifest["version"], "0.21.3.post7")
+        self.assertEqual(manifest["version"], "0.21.3.post8")
         pyplejd = next(
             requirement
             for requirement in manifest["requirements"]
@@ -34,7 +34,22 @@ class ReleaseTests(unittest.TestCase):
         self.assertFalse(values["ENABLE_ACTIVE_BUTTON_POLLING"])
         self.assertTrue(values["ROUTE_CONTROL_WRITES_DIRECTLY"])
         self.assertTrue(values["RECONNECT_NON_GATEWAY_CONTROL_WRITES"])
+        self.assertTrue(values["ON_DEMAND_CONTROL_CONNECTIONS"])
         self.assertEqual(values["DUPLICATE_BUTTON_EVENT_WINDOW_SECONDS"], 0.25)
+
+    def test_on_demand_mode_uses_advertisements_without_keepalive(self):
+        site_source = (COMPONENT / "plejd_site.py").read_text()
+        entity_source = (COMPONENT / "plejd_entity.py").read_text()
+        self.assertIn(
+            "self.manager.disconnect_after_direct_control_write",
+            site_source,
+        )
+        self.assertIn(
+            "self.manager.advertisement_callback(service_info.device.address)",
+            site_source,
+        )
+        self.assertIn("if not ON_DEMAND_CONTROL_CONNECTIONS:", site_source)
+        self.assertIn("self._data = self.device.state", entity_source)
 
     def test_component_sources_compile(self):
         for path in COMPONENT.glob("*.py"):

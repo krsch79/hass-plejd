@@ -24,6 +24,7 @@ from pyplejd import (
 from .const import (
     DOMAIN,
     ENABLE_ACTIVE_BUTTON_POLLING,
+    ON_DEMAND_CONTROL_CONNECTIONS,
     ROUTE_CONTROL_WRITES_DIRECTLY,
     RECONNECT_NON_GATEWAY_CONTROL_WRITES,
 )
@@ -65,6 +66,9 @@ class PlejdSite:
         self.manager.route_control_writes_directly = ROUTE_CONTROL_WRITES_DIRECTLY
         self.manager.reconnect_after_control_write = (
             RECONNECT_NON_GATEWAY_CONTROL_WRITES
+        )
+        self.manager.disconnect_after_direct_control_write = (
+            ON_DEMAND_CONTROL_CONNECTIONS
         )
 
         self.devices: list[dt.PlejdDevice] = []
@@ -139,15 +143,16 @@ class PlejdSite:
             if PLEJD_SERVICE.lower() in service_info.advertisement.service_uuids:
                 self._discovered(service_info, connect=False)
 
-        # Ping the mesh periodically to maintain the connection
-        self.config_entry.async_on_unload(
-            async_track_time_interval(
-                self.hass,
-                self._ping,
-                self.manager.ping_interval,
-                name="Plejd keep-alive",
+        if not ON_DEMAND_CONTROL_CONNECTIONS:
+            # Ping the mesh periodically to maintain the connection.
+            self.config_entry.async_on_unload(
+                async_track_time_interval(
+                    self.hass,
+                    self._ping,
+                    self.manager.ping_interval,
+                    name="Plejd keep-alive",
+                )
             )
-        )
 
         # Check that the mesh clock is in sync once per hour
         self.config_entry.async_on_unload(
@@ -163,7 +168,8 @@ class PlejdSite:
 
         self.started = True
 
-        self.hass.async_create_task(self._ping())
+        if not ON_DEMAND_CONTROL_CONNECTIONS:
+            self.hass.async_create_task(self._ping())
         self.hass.async_create_task(self._broadcast_time())
 
     async def stop(self, *_) -> None:
@@ -190,7 +196,7 @@ class PlejdSite:
     def connection_monitor(self, connected):
         if self.stopping:
             return
-        if not connected:
+        if not connected and not ON_DEMAND_CONTROL_CONNECTIONS:
             self.hass.async_create_task(self._ping())
 
     def _discovered(
@@ -200,12 +206,18 @@ class PlejdSite:
         new_device = self.manager.add_mesh_device(
             service_info.device, service_info.rssi
         )
-        if connect and new_device:
+        if ON_DEMAND_CONTROL_CONNECTIONS:
+            self.manager.advertisement_callback(service_info.device.address)
+        elif connect and new_device:
             self.hass.async_create_task(self._ping())
 
     async def _ping(self, *_) -> None:
         """Ping the plejd mesh to connect or maintain the connection."""
-        if self.stopping or not self.started:
+        if (
+            self.stopping
+            or not self.started
+            or ON_DEMAND_CONTROL_CONNECTIONS
+        ):
             return
         if not await self.manager.ping():
             _LOGGER.debug("Ping failed")

@@ -24,6 +24,7 @@ from pyplejd import (
 from .const import (
     DOMAIN,
     ENABLE_ACTIVE_BUTTON_POLLING,
+    FAST_REMOTE_CONTROL_FLUSH,
     ROUTE_CONTROL_WRITES_DIRECTLY,
     RECONNECT_NON_GATEWAY_CONTROL_WRITES,
 )
@@ -63,6 +64,7 @@ class PlejdSite:
         self.manager: PlejdManager = PlejdManager(**self.credentials)
         self.manager.button_events_enabled = ENABLE_ACTIVE_BUTTON_POLLING
         self.manager.route_control_writes_directly = ROUTE_CONTROL_WRITES_DIRECTLY
+        self.manager.fast_remote_control_flush = FAST_REMOTE_CONTROL_FLUSH
         self.manager.reconnect_after_control_write = (
             RECONNECT_NON_GATEWAY_CONTROL_WRITES
         )

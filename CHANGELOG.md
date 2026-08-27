@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.21.3.post10 - 2026-08-27
+
+- Discard stale state-changing LastData echoes in direct on-demand sessions.
+- Use the post-command LightLevel poll as the sole authoritative Plejd state,
+  preventing false off/on transitions from propagating to Homey when lights
+  are adjusted in quick succession.
+- Pin pyplejd to the matching post9 echo-filter build.
+
 ## 0.21.3.post9 - 2026-08-27
 
 - Isolate every on-demand BLE session from delayed notifications belonging to

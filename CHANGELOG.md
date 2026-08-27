@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.21.3.post9 - 2026-08-27
+
+- Isolate every on-demand BLE session from delayed notifications belonging to
+  the previously controlled Plejd node.
+- Filter direct-session state updates to outputs on the connected target
+  hardware, preventing stale mesh reports from switching an unrelated Home
+  Assistant or Homey light state during rapid consecutive dim commands.
+- Pin pyplejd to the matching post8 race-condition fix.
+
 ## 0.21.3.post8 - 2026-08-22
 
 - Replace the long-lived Plejd gateway connection with confirmed, on-demand

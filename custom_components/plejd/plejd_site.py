@@ -70,6 +70,7 @@ class PlejdSite:
         self.manager.disconnect_after_direct_control_write = (
             ON_DEMAND_CONTROL_CONNECTIONS
         )
+        self.manager.filter_direct_state_updates = ON_DEMAND_CONTROL_CONNECTIONS
 
         self.devices: list[dt.PlejdDevice] = []
 

@@ -6,7 +6,7 @@ Connects to your [Plejd](https://www.plejd.com) devices using your Home Assistan
 
 ## Kristian reliability fork
 
-Version `0.21.3.post8` is pinned to a tested pyplejd commit for Home Assistant
+Version `0.21.3.post9` is pinned to a tested pyplejd commit for Home Assistant
 2026.8 and Plejd firmware 6.43.x. Address-specific light commands are routed
 through a direct authenticated BLE connection to the Plejd hardware that owns
 the output. This bypasses broken mesh forwarding observed on firmware 6.43.x.
@@ -15,6 +15,10 @@ polled, and the controller then disconnects. BLE advertisements keep entities
 available between commands without leaving a DIM-01-2P node in the long-lived
 gateway state that triggered output oscillation on firmware 6.43.3. Active
 button-event polling remains disabled to prevent stale-event feedback.
+Each on-demand connection also accepts notifications only from that exact BLE
+session and only for outputs owned by its target hardware. This prevents a
+delayed or stale mesh status from one light being applied while a second light
+is adjusted immediately afterwards.
 
 Commands that cannot be mapped safely to one hardware node retain the post5
 fallback: poll NodeIndexData, require matching physical power and dim state,

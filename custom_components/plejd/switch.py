@@ -8,6 +8,7 @@ from homeassistant.const import EntityCategory
 
 from .plejd_site import dt, get_plejd_site_from_config_entry, PlejdSite
 from .plejd_entity import PlejdDeviceBaseEntity, PlejdDeviceDiagnosticEntity
+from .const import ON_DEMAND_CONTROL_CONNECTIONS
 
 
 async def async_setup_entry(
@@ -32,7 +33,7 @@ async def async_setup_entry(
     def async_add_diagnostic_switch(device: dt.PlejdDevice, site: PlejdSite) -> None:
         """Add diagnostic switches from Plejd."""
         entity = PlejdConnectableSwitch(device, site)
-        if device.hw._powered:
+        if device.hw._powered and not ON_DEMAND_CONTROL_CONNECTIONS:
             async_add_entities([entity])
 
     site.register_platform_add_device_callback(async_add_diagnostic_switch, "HW")

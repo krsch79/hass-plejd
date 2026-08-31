@@ -10,6 +10,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .plejd_site import dt, get_plejd_site_from_config_entry, PlejdSite
 from .plejd_entity import PlejdDeviceBaseEntity, PlejdDeviceDiagnosticEntity
+from .const import ON_DEMAND_CONTROL_CONNECTIONS
 
 
 async def async_setup_entry(
@@ -33,9 +34,11 @@ async def async_setup_entry(
     @callback
     def async_add_diagnostic_sensors(device: dt.PlejdDevice, site: PlejdSite):
         """Add diagnostic sensors from Plejd."""
-        gateway = PlejdGatewaySensor(device, hass)
         connectable = PlejdConnectableSensor(device, hass)
-        async_add_entities([gateway, connectable])
+        entities = [connectable]
+        if not ON_DEMAND_CONTROL_CONNECTIONS:
+            entities.insert(0, PlejdGatewaySensor(device, hass))
+        async_add_entities(entities)
 
     site.register_platform_add_device_callback(async_add_diagnostic_sensors, "HW")
 

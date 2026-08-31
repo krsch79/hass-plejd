@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.21.3.post11 - 2026-08-31
+
+- Stop creating the misleading `Is gateway` and `May be gateway` entities while
+  direct on-demand control is active; short command sessions are not persistent
+  Plejd mesh gateways.
+- Add structured `PLEJD_COMMAND_AUDIT` log lines for every light command,
+  including Home Assistant context identifiers but no credentials, so future
+  unexpected group-off commands can be traced to their caller and timestamp.
+
 ## 0.21.3.post10 - 2026-08-27
 
 - Discard stale state-changing LastData echoes in direct on-demand sessions.

@@ -12,7 +12,7 @@ COMPONENT = ROOT / "custom_components" / "plejd"
 class ReleaseTests(unittest.TestCase):
     def test_manifest_pins_exact_reliability_commit(self):
         manifest = json.loads((COMPONENT / "manifest.json").read_text())
-        self.assertEqual(manifest["version"], "0.21.3.post10")
+        self.assertEqual(manifest["version"], "0.21.3.post11")
         pyplejd = next(
             requirement
             for requirement in manifest["requirements"]
@@ -101,6 +101,22 @@ class ReleaseTests(unittest.TestCase):
         self.assertEqual(len(enabled_defaults), 1)
         self.assertIsInstance(enabled_defaults[0].value, ast.Constant)
         self.assertFalse(enabled_defaults[0].value.value)
+
+    def test_on_demand_mode_does_not_create_gateway_entities(self):
+        binary_sensor_source = (COMPONENT / "binary_sensor.py").read_text()
+        switch_source = (COMPONENT / "switch.py").read_text()
+        self.assertIn("if not ON_DEMAND_CONTROL_CONNECTIONS:", binary_sensor_source)
+        self.assertIn(
+            "device.hw._powered and not ON_DEMAND_CONTROL_CONNECTIONS",
+            switch_source,
+        )
+
+    def test_light_commands_have_structured_audit_logging(self):
+        light_source = (COMPONENT / "light.py").read_text()
+        self.assertIn("PLEJD_COMMAND_AUDIT", light_source)
+        self.assertIn('self._audit_command("turn_off")', light_source)
+        self.assertIn('"turn_on",', light_source)
+        self.assertNotIn("password", light_source.lower())
 
 
 if __name__ == "__main__":

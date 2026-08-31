@@ -1,5 +1,7 @@
 """Support for Plejd lights."""
 
+import logging
+
 from homeassistant.components.light import LightEntity, ColorMode
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import callback, HomeAssistant
@@ -7,6 +9,9 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .plejd_site import dt, get_plejd_site_from_config_entry, PlejdSite
 from .plejd_entity import PlejdDeviceBaseEntity
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -73,6 +78,21 @@ class PlejdLight(PlejdDeviceBaseEntity, LightEntity):
             return ColorMode.BRIGHTNESS
         return ColorMode.ONOFF
 
+    def _audit_command(self, action: str, **details) -> None:
+        """Record an operator-visible command trail without credentials."""
+        context = self._context
+        _LOGGER.info(
+            "PLEJD_COMMAND_AUDIT action=%s entity_id=%s name=%s "
+            "context_id=%s parent_id=%s user_id=%s details=%s",
+            action,
+            self.entity_id,
+            self.device.name,
+            getattr(context, "id", None),
+            getattr(context, "parent_id", None),
+            getattr(context, "user_id", None),
+            details,
+        )
+
     async def async_turn_on(
         self,
         brightness: int | None = None,
@@ -81,9 +101,16 @@ class PlejdLight(PlejdDeviceBaseEntity, LightEntity):
         **_,
     ) -> None:
         """Turn the light on."""
+        self._audit_command(
+            "turn_on",
+            brightness=brightness,
+            color_temp=color_temp,
+            color_temp_kelvin=color_temp_kelvin,
+        )
         ct = 1e6 / color_temp_kelvin if color_temp_kelvin else color_temp
         await self.device.turn_on(brightness, ct)
 
     async def async_turn_off(self, **_) -> None:
         """Turn the light off."""
+        self._audit_command("turn_off")
         await self.device.turn_off()

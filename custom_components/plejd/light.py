@@ -81,7 +81,9 @@ class PlejdLight(PlejdDeviceBaseEntity, LightEntity):
     def _audit_command(self, action: str, **details) -> None:
         """Record an operator-visible command trail without credentials."""
         context = self._context
-        _LOGGER.info(
+        # Home Assistant filters custom-component INFO records unless the user
+        # adds a logger override. Keep this audit durable on the default setup.
+        _LOGGER.warning(
             "PLEJD_COMMAND_AUDIT action=%s entity_id=%s name=%s "
             "context_id=%s parent_id=%s user_id=%s details=%s",
             action,

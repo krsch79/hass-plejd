@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.21.3.post12 - 2026-08-31
+
+- Emit `PLEJD_COMMAND_AUDIT` at a level retained by Home Assistant's default
+  logging configuration. The post11 INFO record was filtered unless a custom
+  logger override was configured, which defeated the operational audit trail.
+
 ## 0.21.3.post11 - 2026-08-31
 
 - Stop creating the misleading `Is gateway` and `May be gateway` entities while

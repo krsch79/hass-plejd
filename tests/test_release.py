@@ -12,7 +12,7 @@ COMPONENT = ROOT / "custom_components" / "plejd"
 class ReleaseTests(unittest.TestCase):
     def test_manifest_pins_exact_reliability_commit(self):
         manifest = json.loads((COMPONENT / "manifest.json").read_text())
-        self.assertEqual(manifest["version"], "0.21.3.post11")
+        self.assertEqual(manifest["version"], "0.21.3.post12")
         pyplejd = next(
             requirement
             for requirement in manifest["requirements"]
@@ -114,6 +114,7 @@ class ReleaseTests(unittest.TestCase):
     def test_light_commands_have_structured_audit_logging(self):
         light_source = (COMPONENT / "light.py").read_text()
         self.assertIn("PLEJD_COMMAND_AUDIT", light_source)
+        self.assertIn("_LOGGER.warning", light_source)
         self.assertIn('self._audit_command("turn_off")', light_source)
         self.assertIn('"turn_on",', light_source)
         self.assertNotIn("password", light_source.lower())

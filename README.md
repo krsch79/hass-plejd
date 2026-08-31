@@ -6,7 +6,7 @@ Connects to your [Plejd](https://www.plejd.com) devices using your Home Assistan
 
 ## Kristian reliability fork
 
-Version `0.21.3.post11` is pinned to a tested pyplejd commit for Home Assistant
+Version `0.21.3.post12` is pinned to a tested pyplejd commit for Home Assistant
 2026.8 and Plejd firmware 6.43.x. Address-specific light commands are routed
 through a direct authenticated BLE connection to the Plejd hardware that owns
 the output. This bypasses broken mesh forwarding observed on firmware 6.43.x.
@@ -36,8 +36,9 @@ In direct on-demand mode, the integration no longer creates `Is gateway` or
 `May be gateway` entities. A short authenticated command connection must not be
 presented as a persistent mesh gateway. Every light command is also written as
 a structured `PLEJD_COMMAND_AUDIT` line with action, entity and Home Assistant
-context identifiers. The audit deliberately excludes credentials and Bluetooth
-addresses and is intended to trace any future unexpected group-off request.
+context identifiers at a level retained by Home Assistant's default logging.
+The audit deliberately excludes credentials and Bluetooth addresses and is
+intended to trace any future unexpected group-off request.
 
 This is a local compatibility release while upstream issue #162 remains open.
 Do not replace it from HACS with upstream `0.21.3` without repeating the full

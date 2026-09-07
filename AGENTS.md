@@ -7,6 +7,8 @@
   databases, logs, access tokens, or Bluetooth addresses from the live system.
 - Keep `custom_components/plejd/manifest.json` pinned to an exact public
   `krsch79/pyplejd` commit, never a moving branch.
+- Fill a pyplejd manifest pin from `git rev-parse HEAD` and compare the complete
+  40-character value after editing; never transcribe or predict the commit hash.
 - Before deployment run `python -m unittest -v tests.test_release`, compile all
   component files, install the exact manifest requirement in a clean Python
   3.14 environment, and run Home Assistant `check_config` against a backup.

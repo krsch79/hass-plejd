@@ -12,7 +12,7 @@ COMPONENT = ROOT / "custom_components" / "plejd"
 class ReleaseTests(unittest.TestCase):
     def test_manifest_pins_exact_reliability_commit(self):
         manifest = json.loads((COMPONENT / "manifest.json").read_text())
-        self.assertEqual(manifest["version"], "0.21.3.post12")
+        self.assertEqual(manifest["version"], "0.21.3.post13")
         pyplejd = next(
             requirement
             for requirement in manifest["requirements"]
@@ -32,9 +32,9 @@ class ReleaseTests(unittest.TestCase):
                 if isinstance(target, ast.Name):
                     values[target.id] = ast.literal_eval(node.value)
         self.assertFalse(values["ENABLE_ACTIVE_BUTTON_POLLING"])
-        self.assertTrue(values["ROUTE_CONTROL_WRITES_DIRECTLY"])
-        self.assertTrue(values["RECONNECT_NON_GATEWAY_CONTROL_WRITES"])
-        self.assertTrue(values["ON_DEMAND_CONTROL_CONNECTIONS"])
+        self.assertFalse(values["ROUTE_CONTROL_WRITES_DIRECTLY"])
+        self.assertFalse(values["RECONNECT_NON_GATEWAY_CONTROL_WRITES"])
+        self.assertFalse(values["ON_DEMAND_CONTROL_CONNECTIONS"])
         self.assertEqual(values["DUPLICATE_BUTTON_EVENT_WINDOW_SECONDS"], 0.25)
 
     def test_on_demand_mode_uses_advertisements_without_keepalive(self):
@@ -102,7 +102,7 @@ class ReleaseTests(unittest.TestCase):
         self.assertIsInstance(enabled_defaults[0].value, ast.Constant)
         self.assertFalse(enabled_defaults[0].value.value)
 
-    def test_on_demand_mode_does_not_create_gateway_entities(self):
+    def test_persistent_mode_creates_gateway_entities(self):
         binary_sensor_source = (COMPONENT / "binary_sensor.py").read_text()
         switch_source = (COMPONENT / "switch.py").read_text()
         self.assertIn("if not ON_DEMAND_CONTROL_CONNECTIONS:", binary_sensor_source)

@@ -6,8 +6,14 @@ Connects to your [Plejd](https://www.plejd.com) devices using your Home Assistan
 
 ## Kristian reliability fork
 
-Version `0.21.3.post12` is pinned to a tested pyplejd commit for Home Assistant
-2026.8 and Plejd firmware 6.43.x. Address-specific light commands are routed
+Version `0.21.3.post13` is a controlled central-mesh trial for Home Assistant
+2026.8 and Plejd firmware 6.43.x. It pins pyplejd post10, which requests a
+30-50 ms Bluetooth connection interval after authentication so the selected
+gateway retains radio time for relaying Plejd mesh traffic. Only Innvendig
+inngangsparti may be enabled as the persistent gateway in production.
+
+The previous post12/post9 release remains the exact rollback baseline. In that
+release, address-specific light commands are routed
 through a direct authenticated BLE connection to the Plejd hardware that owns
 the output. This bypasses broken mesh forwarding observed on firmware 6.43.x.
 The connection is opened only for a command, its resulting physical state is
@@ -32,7 +38,7 @@ configuration entities and are disabled by default so bridge clients such as
 Homey do not present them as extra circuit switches. They can still be enabled
 explicitly for diagnostics.
 
-In direct on-demand mode, the integration no longer creates `Is gateway` or
+In the post12 direct on-demand mode, the integration does not create `Is gateway` or
 `May be gateway` entities. A short authenticated command connection must not be
 presented as a persistent mesh gateway. Every light command is also written as
 a structured `PLEJD_COMMAND_AUDIT` line with action, entity and Home Assistant

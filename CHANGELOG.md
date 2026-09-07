@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.21.3.post13 - 2026-09-07
+
+- Trial central Plejd mesh mode with one persistent gateway and no per-command
+  direct reconnects.
+- Pin pyplejd post10, which requests a mesh-friendly 30-50 ms BLE connection
+  interval after authentication based on upstream pyplejd PR #24.
+- Preserve post12/post9 direct on-demand control as the documented rollback.
+
 ## 0.21.3.post12 - 2026-08-31
 
 - Emit `PLEJD_COMMAND_AUDIT` at a level retained by Home Assistant's default
